@@ -44,13 +44,21 @@ public class Constant {
 //	public static final String APPID = "Zak9JumxK7f3fzdi7opH0crHj14a";
 //	public static final String SECRET = "FPBqfpMkfPTfpDPAuYcC6oUyeika";
 	//沧州电信
-	public static final String APPID = "A4xBkTf1ijfwt1zSfxYe0Biw6aUa";
-	public static final String SECRET = "Q7gkxoWcOr9sO3eNz7QZCnH8c1Ea";
+//	public static final String APPID = "AhmIoEaEWZWcOHK_uOWf6DTodKca";
+//	public static final String SECRET = "G51fhrMftlFKg7dxoNF8B33qfwka";
     
 	// 平台电信测试
-//	public static final String APPID = "fMGd_rcfIZWtL9XA8pppuvtfq1Ma";
-//	public static final String SECRET = "fTqg62CwkgBKRL8fNaaT62LxnjQa";
-
+//	public static final String APPID = "wGn1VIZ6pTCbFF7tEbiAWHytTYga";
+//	public static final String SECRET = "j1gMTZbtmbvbT8BXrreQBCWb4Msa";
+	//云能正式平台 道成应用
+//	public static final String APPID = "S8qs8VipxHnwm83p9LiAK5udV6ka";
+//	public static final String SECRET = "DyhNB3eGujzSGKnQ5zc9gE6oKPwa";
+	
+	// 道成测试平台 道成应用
+	public static final String APPID = "WvxUlHfhWbrvxufi9Apo0rWJ0mUa";
+	public static final String SECRET = "xfl1jcGL6y0cjQF5jelITwIWD9Ua";
+	
+	
     //府星电信 595yVAxsUL1HnK84TnylSC6xaY8a
 //    public static final String APPID = "595yVAxsUL1HnK84TnylSC6xaY8a";
 //    public static final String SECRET = "FD9Rz9ayh80D1KM6146VXxQwU54a";
@@ -62,7 +70,7 @@ public class Constant {
      *IP and port of callback url.
      *please replace the IP and Port of your Application deployment environment address, when you use the demo.
      */
-    public static final String CALLBACK_BASE_URL = "http://222.222.60.178:18213";
+    public static final String CALLBACK_BASE_URL = "https://39.106.116.158:8443";
 
     /*
      * complete callback url：

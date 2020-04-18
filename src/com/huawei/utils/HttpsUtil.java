@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyStore;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,13 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.AuthSchemes;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -25,15 +30,20 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 
 @SuppressWarnings("deprecation")
@@ -78,25 +88,37 @@ public class HttpsUtil extends DefaultHttpClient {
 		caCert.load(new FileInputStream(trustcapath), Constant.TRUSTCAPWD.toCharArray());
 		TrustManagerFactory tmf = TrustManagerFactory.getInstance("sunx509");
 		tmf.init(caCert);
+		
+		TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("sunx509");
+		trustManagerFactory.init(caCert);
 
-		SSLContext sc = SSLContext.getInstance("TLS");
-		sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+		SSLContext sslcontext = SSLContext.getInstance("TLS");
+		sslcontext.init(kmf.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+		
+		HttpHost HttpHost = new HttpHost("192.168.19.20",808);
+		// 创建Registry
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD_STRICT)
+			.setConnectTimeout(5000).setConnectionRequestTimeout(1000)
+				.setSocketTimeout(5000)
+				.setProxy(HttpHost)
+				.setExpectContinueEnabled(Boolean.TRUE)
+				.setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
+				.setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC)).build();
 
-		// 3 Set the domain name to not verify
-		// (Non-commercial IoT platform, no use domain name access generally.)
-		SSLSocketFactory ssf = new SSLSocketFactory(sc,
-				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+		SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslcontext,
+				NoopHostnameVerifier.INSTANCE);
+		// 设置协议http和https对应的处理socket链接工厂的对象
+		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+				.register("http", PlainConnectionSocketFactory.INSTANCE).register("https", socketFactory).build();
+		
+		// 创建ConnectionManager，添加Connection配置信息
+		PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(
+				socketFactoryRegistry);
+		CloseableHttpClient closeableHttpClient = HttpClients.custom().setConnectionManager(connectionManager)
+				.setDefaultRequestConfig(requestConfig).build();
+		
+		httpClient = closeableHttpClient;
 
-		// If the platform has already applied for a domain name which matches
-		// the domain name in the certificate information, the certificate
-		// domain name check can be enabled (open by default)
-		// SSLSocketFactory ssf = new SSLSocketFactory(sc);
-
-		ClientConnectionManager ccm = this.getConnectionManager();
-		SchemeRegistry sr = ccm.getSchemeRegistry();
-		sr.register(new Scheme("https", 8743, ssf));
-
-		httpClient = new DefaultHttpClient(ccm);
 	}
 
 	/**

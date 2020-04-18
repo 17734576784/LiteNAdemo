@@ -36,6 +36,9 @@ public class TestSubscribeAllNotification {
         List<String> notifyTypes = NotifyType.getNotifyTypes();
         for (String notifyType : notifyTypes) {
             
+			String deleteURl = "https://device.api.ct10649.com:8743/iocm/app/sub/v1.2.0/subscriptions?appId="+appId;
+
+			
 			Map<String, Object> paramSubscribe = new HashMap<>();
 			paramSubscribe.put("notifyType", notifyType);
 			String callbackurl1 = callbackurl + "/chinatelecom/" + notifyType;

@@ -27,16 +27,16 @@ public class ModifyDeviceInfo {
 		String appId = Constant.APPID;
 
         //please replace the deviceId, when you use the demo.
-        String deviceId = "63c04ac0-a0ae-4e87-bd0c-9cad975202a3";
+        String deviceId = "80a43ebb-09d5-4a21-ac2c-ccdee86c70e4";
         String urlModifyDeviceInfo = Constant.MODIFY_DEVICE_INFO + "/" + deviceId;
 
         //please replace the following parameter values, when you use the demo.
         //And those parameter values must be consistent with the content of profile that have been preset to IoT platform.
         //The following parameter values of this demo are use the watermeter profile that already initialized to IoT platform.
-        String manufacturerId= "Jingda";
-        String manufacturerName = "Jingda";
+        String manufacturerId= "KeLinDianQi";
+        String manufacturerName = "KeLinDianQi";
         String deviceType = "WaterMeter";
-        String model = "CoapV0200";
+        String model = "W01";
         String protocolType = "CoAP";
 
         Map<String, Object> paramModifyDeviceInfo = new HashMap<>();

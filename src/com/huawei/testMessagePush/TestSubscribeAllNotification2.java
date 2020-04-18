@@ -23,9 +23,7 @@ public class TestSubscribeAllNotification2 {
 	    
 		String accessToken = login(httpsUtil);
 		String appId = Constant.APPID; // please replace the appId, when you use the demo.
-        String urlSubscribe = Constant.SUBSCRIBE_NOTIFYCATION; // please replace the IP and Port of BASE_URL, when you use the demo.
         String callbackurl = NotifyType.TEST_CALLBACK_BASE_URL; // please replace the IP and Port of BASE_URL, when you use the demo.
-        
         /*
          * na to subscribe notification from the IoT platform
          * notifyTypes: 
@@ -35,6 +33,7 @@ public class TestSubscribeAllNotification2 {
         List<String> notifyTypes = NotifyType.getNotifyTypes();
         for (String notifyType : notifyTypes) {
 			String deleteURl = "https://device.api.ct10649.com:8743/iocm/app/sub/v1.2.0/subscriptions?appId="+appId;
+//			String deleteURl = "https://180.101.147.89:8743/iocm/app/sub/v1.2.0/subscriptions?appId="+appId;
 
 			String callbackurl1 = callbackurl + "/chinatelecom/" + notifyType;
 			System.out.println("callbackurl1 : "+ callbackurl1);
